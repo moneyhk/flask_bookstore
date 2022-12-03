@@ -26,3 +26,4 @@ step3,将迁移脚本映射到数据库中：python manage.py db upgrade
 1. 用Bootstrap-Flask,不要用flask_bootstrap
 2. mysql-connector-python-rf
 3. flask_sqlalchemy版本3.0.2报错,降级2.5.0
+4. flask_migrate==2.7
