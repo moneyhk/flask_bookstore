@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as macros %}
+{% block title %}购物车{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/cart.css') }}">
+    <script src="{{ url_for('static',filename='javaScript/jquery-input-counter.js') }}"></script>
+    <script src="{{ url_for('static',filename='javaScript/cart.js') }}"></script>
+{% endblock %}
+
+{% block carousel %}
+{% endblock %}
+
+{% block main %}
+    <table class="table table-hover">
+        <tbody>
+        {% for item in user.cart.cart_items %}
+            <tr data-item_id="{{ item.id }}">
+                <td style="vertical-align: middle">
+                    <input type="checkbox" checked>
+                </td>
+                <td class="show_modal" style="vertical-align:middle;width: 30%">
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#modal-comment-book"
+                       data-url="{{ url_for('book_detail_customer',book_id=item.book.id) }}"
+                       class="thumbnail">
+                        <img src="{{ item.book.image_url }}" alt=""
+                             style="height: 100px;">
+                    </a>
+                </td>
+                <td style="vertical-align: middle;width: 25%">{{ item.book.name }}</td>
+                <td style="vertical-align: middle;width: 15%">
+                    <div class="spinner-div">
+                        <button type="button" class="btn btn-subtract" style="padding: 1px 5px">
+                            -
+                        </button>
+                        <input size="1" type="text" class="input-counter input_quantity"
+                               data-price="{{ item.book.price }}" data-item_id="{{ item.id }}"
+                               data-min="1" data-max="{{ item.book.quantity }}" data-default="{{ item.quantity }}">
+                        <button type="button" class="btn btn-add" style="padding: 1px 5px">
+                            +
+                        </button>
+                    </div>
+                </td>
+                <td style="vertical-align: middle">
+                    <div class="input-group" style="width: 190px">
+                        <div class="input-group-addon">￥</div>
+                        <input type="text" class="form-control" value="{{ item.price }}" disabled>
+                    </div>
+                </td>
+                <td style="vertical-align: middle">
+                    <a class="btn btn-warning a_del_cart_item" href="{{ url_for('delete_cart_item',item_id=item.id) }}">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if user.cart.cart_items|length > 0 and user.recipients|length > 0 %}
+        <div>
+            <form>
+            </form>
+            <button class="btn btn-success pull-right" id="btn_buy" data-toggle="modal" data-target="#modal-pay"
+            >购买
+            </button>
+            <button class="btn pull-right" id="btn_check_all">全选</button>
+            <select class="form-control pull-left" id="sel_address" style="width: 80%;overflow: hidden">
+                {% for recipient in user.recipients %}
+                    <option value="{{ recipient.id }}">
+                        {{ recipient.address }}&emsp;&emsp;&emsp;&emsp;&emsp;{{ recipient.name }}&emsp;&emsp;&emsp;&emsp;{{ recipient.phone }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block book_madol %}
+    {#    模态框 #}
+    <div class="modal fade modal-pay" tabindex="-1" role="dialog" id="modal-pay"
+         aria-labelledby="exampleModalLabel">
+    </div>
+    {#    模态框 #}
+    <div class="modal fade modal-book-detail" tabindex="-1" role="dialog" id="modal-comment-book"
+         aria-labelledby="exampleModalLabel">
+    </div>
+{% endblock %}

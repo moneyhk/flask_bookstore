@@ -1,0 +1,54 @@
+.main {
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 84%;
+    overflow: hidden;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+.transparent {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body {
+    /*background-color: #f3f3f3;*/
+    /*background: url("/static/image/bookg.jpg");*/
+    background:#F5E1DF url("/static/image/bookg.jpg") no-repeat 50% 0;
+    -moz-background-size:100% 100%;
+    background-size:100% auto;
+}
+
+.base-center {
+    width: 63%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.left {
+    width: 15%;
+    overflow: hidden;
+}
+
+.title {
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.container35 {
+    width: 35%;
+    margin: 0 auto;
+}
+
+tr td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.base-page-fixed{
+    position: fixed;
+     top: 200px;
+    right: 50px;
+    width: 200px;
+}

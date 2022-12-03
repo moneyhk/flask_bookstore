@@ -1,0 +1,133 @@
+<div class="modal-dialog book_detail_dialog" role="document" data-book_id="{{ book.id }}"
+     data-first_page="{{ request.path }}">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">图书详情</h4>
+        </div>
+        <div class="modal-body">
+            <dl>
+                <dt><img src="{{ book.image_url }}" style="height: 200px;"></dt>
+                <dt>书名</dt>
+                <dd>《{{ book.name }}》</dd>
+                <dt>内容简介</dt>
+                <dd><p>{{ book.introduction }}</p></dd>
+                <dt>作者</dt>
+                <dd>{{ book.author }}</dd>
+                <dt>出版社</dt>
+                <dd>{{ book.press }}</dd>
+                <dt>出版时间</dt>
+                <dd>{{ book.publish_time }}</dd>
+                <dt>库存</dt>
+                <dd>{{ book.quantity }}</dd>
+                <dt>销售量</dt>
+                <dd>{{ book.sales_volume }}</dd>
+                <dt>收藏数</dt>
+                <dd class="like_count_{{ book.id }}">{{ book.liked_by_users|length }}</dd>
+                <dt>价格</dt>
+                <dd>{{ book.price }}</dd>
+            </dl>
+            {% if user and not user.admin %}
+                <a href="{{ url_for('add_to_cart') }}?book_id={{ book.id }}"
+                   class="btn btn-primary a_add_to_cart" style="margin-right: 5px;" role="button">加入购物车</a>
+                {% if book in user.favorite_books %}
+                    <a href="javaScript:;"
+                       data-url="{{ url_for('like_change', book_id=book.id) }}"
+                       data-id="like_count_{{ book.id }}"
+                       class="btn btn-danger a-like" role="button">取消收藏</a>
+                {% else %}
+                    <a href="javaScript:;"
+                       data-url="{{ url_for('like_change', book_id=book.id) }}"
+                       data-id="like_count_{{ book.id }}"
+                       class="btn btn-info a-like" role="button">收藏</a>
+                {% endif %}
+            {% endif %}
+            {% for comment in paginate.items %}
+
+                <blockquote>
+                    <p>{{ comment.content }}</p>
+                    <footer>&nbsp;{{ comment.from_user.username }}&nbsp;&nbsp;
+                        {% if comment.to_user %}
+                            <cite>回复</cite>&nbsp;&nbsp;{{ comment.to_user.username }}&nbsp;&nbsp;
+                        {% endif %}
+                        <cite>发表于</cite>&nbsp;&nbsp;&nbsp;{{ comment.publish_time }}
+                        {% if user %}
+                                <p class="text-right">
+                            {% if user.id != comment.from_user_id %}
+                                <a href="javascript:void(0);"
+                                   onclick="setTarget('{{ comment.from_user_id }}','{{ comment.from_user.username }}')">回复</a>
+                            {% else %}
+                                <a class="del-comment" href="javascript:;" data-url="{% if user.admin %}/admin{% endif %}/del_comment_{{ comment.id }}"
+                                   >删除</a>
+                            {% endif %}
+                                </p>
+                        {% endif %}
+                    </footer>
+                </blockquote>
+                {# 分页 #}
+                {% if loop.last and paginate.pages>1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="ajPage">
+                                <a {% if paginate.has_prev %}href="javascript:void(0);"
+                                   data-page="{{ paginate.prev_num }}"
+                                   data-href="{{ url }}"{% endif %}
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% if paginate.pages<10 %}
+                                {% for page in range(paginate.pages) %}
+                                    <li class="ajPage"><a href="javascript:void(0);" data-page="{{ page + 1 }}"
+                                                          data-href="{{ url }}">{{ page + 1 }}</a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="aj"><a href="javascript:void(0);" data-page="1" data-href="{{ url }}">1</a>
+                                </li>
+                                <li class="ellipsis">...</li>
+                                {% for page in range(paginate.page - 3,paginate.page + 4) %}
+                                    <li class="aj"><a href="javascript:void(0);" data-page="{{ page }}"
+                                                      data-href="{{ url }}">{{ page }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="ellipsis">...</li>
+                                <li class="aj"><a href="javascript:void(0);" data-page="{{ paginate.pages }}"
+                                                  data-href="{{ url }}">{{ paginate.pages }}</a>
+                                </li>
+                            {% endif %}
+
+                            <li class="ajPage">
+                                <a {% if paginate.has_next %}href="javascript:void(0);"
+                                   data-page="{{ paginate.next_num }}"
+                                   data-href="{{ url }}"{% endif %}
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            {# 如果已登录 显示 评论框 #}
+            {% if user %}
+                <form id="">
+                    <div class="form-group">
+                        <textarea id="comment_content" rows="5" class="form-control" placeholder="请输入评论内容"></textarea>
+                    </div>
+                </form>
+                <button id="submit_btn" type="button" class="btn btn-primary"
+                        data-url="
+
+
+                                {% if user.admin %}{{ url_for('comment_reply') }}{% else %}{{ url_for('user_comment') }}{% endif %}">
+                    评论
+                </button>
+            {% endif %}
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+    </div>
+</div>

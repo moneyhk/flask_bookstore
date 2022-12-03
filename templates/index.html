@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as macros %}
+{% block title %}首页{% endblock %}
+{% block head %}
+
+{% endblock %}
+
+{% block main %}
+    {% for classify in paginate.items %}
+        {% if classify.books|length > 0 %}
+            <div class="row">
+                {% for book in classify.books[0:4] %}
+                    {% if loop.first %}
+                        <h2 style="margin-left: 20px">{{ classify.name }}</h2>
+                    {% endif %}
+                    {% include 'book_sub_page.html' %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if paginate.pages > 1 %}
+        {{ macros.pagination_widget_href_get(paginate,request.path) }}
+    {% endif %}
+{% endblock %}

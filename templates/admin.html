@@ -1,0 +1,109 @@
+{% extends 'admin_base.html' %}
+{% block title %}
+    管理
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/admin.css') }}">
+{% endblock %}
+
+
+
+{% block main %}
+    <ul class="list-group">
+        <li class="list-group-item">
+            <span class="badge">{{ orders_paid_count }}</span>
+            待发货订单
+        </li>
+        {% for order in orders_paid %}
+            {% if loop.first %}
+                <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>订单号</th>
+                    <th>用户名</th>
+                    <th>收货人</th>
+                    <th>手机号码</th>
+                    <th>地址</th>
+                </tr>
+                </thead>
+                <tbady>
+            {% endif %}
+        <tr>
+            <th scope="row"><a data-toggle="modal" data-target="#exampleModal" href="javascript:void(0);"
+                               data-url="{{ url_for('order_query', order_id=order.id) }}">订单_{{ order.id }}</a></th>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.phone }}</td>
+            <td>{{ order.address }}</td>
+        </tr>
+        {% if loop.last %}
+            </tbady>
+            </table>
+        {% endif %}
+        {% endfor %}
+        <li class="list-group-item">
+            <span class="badge">{{ orders_apply_return_count }}</span>
+            退货申请
+        </li>
+        {% for order in orders_apply_return %}
+            {% if loop.first %}
+                <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>订单号</th>
+                    <th>用户名</th>
+                    <th>收货人</th>
+                    <th>手机号码</th>
+                    <th>地址</th>
+                </tr>
+                </thead>
+                <tbady>
+            {% endif %}
+        <tr>
+            <th scope="row"><a data-toggle="modal" data-target="#exampleModal" href="javascript:void(0);"
+                               data-url="{{ url_for('order_query', order_id=order.id) }}">订单_{{ order.id }}</a></th>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.phone }}</td>
+            <td>{{ order.address }}</td>
+        </tr>
+        {% if loop.last %}
+            </tbady>
+            </table>
+        {% endif %}
+        {% endfor %}
+        <li class="list-group-item">
+            <span class="badge">{{ comments_new_count}}</span>
+            新评论
+        </li>
+        {% for comment in comments_new %}
+            {% if loop.first %}
+                <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>评论序号</th>
+                    <th>图书</th>
+                    <th>评论者</th>
+                    <th>评论时间</th>
+                </tr>
+                </thead>
+                <tbady>
+            {% endif %}
+        <tr>
+            <th scope="row"><a data-toggle="modal" data-target="#exampleModal" href="javascript:void(0);"
+                               data-book_id="{{ comment.book_id }}" data-comment_id="{{ comment.id }}"
+                               data-url="{{ url_for('book_detail') }}">评论_{{ comment.id }}</a></th>
+            <td>{{ comment.book.name }}</td>
+            <td>{{ comment.from_user.username }}</td>
+            <td>{{ comment.publish_time }}</td>
+        </tr>
+        {% if loop.last %}
+            </tbady>
+            </table>
+        {% endif %}
+        {% endfor %}
+    </ul>
+{#    模态框 #}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    </div>
+{% endblock %}
